@@ -1,14 +1,12 @@
-function duplicateLetters(...args) {
-  const string = args[0];
-
-  if (typeof string !== 'string') {
-    throw new Error(`Expected a string input, but received ${typeof string}`);
+function duplicateLetters(str) {
+  if (typeof str !== 'string') {
+    throw new Error(`Expected a string input, but received ${typeof str}`);
   }
 
   const characterFrequencyMap = new Map();
-  let maxCount = 1;
+  let maxDuplicateCount = 1;
 
-  for (const character of string) {
+  for (const character of str) {
     let characterFrequency = characterFrequencyMap.get(character);
 
     if (!characterFrequency) {
@@ -18,12 +16,12 @@ function duplicateLetters(...args) {
       characterFrequencyMap.set(character, characterFrequency);
     }
 
-    if (maxCount < characterFrequency) {
-      maxCount = characterFrequency;
+    if (maxDuplicateCount < characterFrequency) {
+      maxDuplicateCount = characterFrequency;
     }
   }
 
-  return maxCount > 1 ? maxCount : false;
+  return maxDuplicateCount > 1 ? maxDuplicateCount : false;
 }
 
 export { duplicateLetters };
