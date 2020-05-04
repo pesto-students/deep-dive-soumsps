@@ -6,15 +6,25 @@ import Dialog from './modal-dialog.component';
 import Header from './modal-header.component';
 import Title from './modal-title.component';
 import Footer from './modal-footer.component';
+import {
+  TAB_KEY_CODE,
+  ESCAPE_KEY_CODE,
+  IS_BACKDROP_PRESENT,
+  BACKDROP_MODAL_CLOSE_ID,
+  IS_CLOSE_BUTTON_PRESENT,
+  ON_ESCAPE_CLOSE,
+  MAX_MODAL_WIDTH,
+  MAX_MODAL_HEIGHT,
+} from './constants';
 import './modal.styles.css';
 
 const defaultValues = {
-  backdrop: true,
-  closeButton: true,
-  onEscapeClose: true,
-  backdropModalCloseId: 'modal-container',
-  maxWidth: 350,
-  maxHeight: 400,
+  backdrop: IS_BACKDROP_PRESENT,
+  closeButton: IS_CLOSE_BUTTON_PRESENT,
+  onEscapeClose: ON_ESCAPE_CLOSE,
+  backdropModalCloseId: BACKDROP_MODAL_CLOSE_ID,
+  maxWidth: MAX_MODAL_WIDTH,
+  maxHeight: MAX_MODAL_HEIGHT,
 };
 
 const { Provider } = ModalContext;
@@ -24,14 +34,12 @@ const Modal = (props) => {
 
   const handleKeyboardButton = useCallback(
     (event) => {
-      // keyboard escape key
-      if (event.keyCode === 27 && newModalValue.onEscapeClose) {
+      if (event.keyCode === ESCAPE_KEY_CODE && newModalValue.onEscapeClose) {
         event.preventDefault();
         newModalValue.closeModalCallback(false);
       }
 
-      // keyboard tab key
-      if (event.keyCode === 9) {
+      if (event.keyCode === TAB_KEY_CODE) {
         if (event.target.getAttribute('data-last-focusable')) {
           event.preventDefault();
           document.querySelector('[data-modal-close-button]').focus();
