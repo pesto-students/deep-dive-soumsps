@@ -10,7 +10,8 @@ const SignInModal = (props) => {
   };
   return (
     <Modal closeModalCallback={props.closeModalCallback}>
-      <Modal.Header closeButton>
+      <Modal.CloseButton></Modal.CloseButton>
+      <Modal.Header>
         <Modal.Title>SIGN IN</Modal.Title>
       </Modal.Header>
       <Modal.Body>

@@ -6,6 +6,7 @@ import Dialog from './modal-dialog.component';
 import Header from './modal-header.component';
 import Title from './modal-title.component';
 import Footer from './modal-footer.component';
+import CloseButton from './modal-close-button.component';
 import {
   TAB_KEY_CODE,
   ESCAPE_KEY_CODE,
@@ -81,5 +82,6 @@ Modal.Header = Header;
 Modal.Title = Title;
 Modal.Body = Body;
 Modal.Footer = Footer;
+Modal.CloseButton = CloseButton;
 
 export default Modal;
