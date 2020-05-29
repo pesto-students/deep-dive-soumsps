@@ -10,11 +10,11 @@ class HomePage extends Component {
 
     this.state = {
       taskList: [
-        { id: '_l4wnop', name: 'Evening Workout', isCompleted: false },
-        { id: '_l4wsy2', name: 'Do something', isCompleted: false },
-        { id: '_l65212', name: 'Sleep atleast for 10hours', isCompleted: false },
+        { _id: '_l4wnop', task: 'Evening Workout', complete: false },
+        { _id: '_l4wsy2', task: 'Do something', complete: false },
+        { _id: '_l65212', task: 'Sleep atleast for 10hours', complete: false },
       ],
-      newTask: { name: '', isCompleted: false },
+      newTask: { task: '', complete: false },
     };
 
     this.onChangeTaskInputField = this.onChangeTaskInputField.bind(this);
@@ -29,18 +29,18 @@ class HomePage extends Component {
 
   addNewTask() {
     const currentTasks = this.state.taskList;
-    const newTaskName = this.state.newTask.name;
+    const newTaskName = this.state.newTask.task;
 
     if (newTaskName !== '') {
       currentTasks.push({
-        id: this.generateID(),
-        name: newTaskName,
-        isCompleted: false,
+        _id: this.generateID(),
+        task: newTaskName,
+        complete: false,
       });
 
       this.setState({ taskList: currentTasks });
       this.setState({
-        newTask: { name: '', isCompleted: false },
+        newTask: { task: '', complete: false },
       });
     }
   }
@@ -49,7 +49,7 @@ class HomePage extends Component {
     const currentTasks = this.state.taskList;
     const taskID = event.target.getAttribute('data-task-id');
     console.log('delete button clicked', taskID);
-    const newTaskList = currentTasks.filter((item) => item.id !== taskID);
+    const newTaskList = currentTasks.filter((item) => item._id !== taskID);
     console.log(newTaskList);
     this.setState({ taskList: newTaskList });
   }
@@ -59,8 +59,8 @@ class HomePage extends Component {
     const taskID = event.target.getAttribute('data-task-id');
     console.log('done button clicked', taskID);
     currentTasks.forEach((item) => {
-      if (item.id === taskID) {
-        item.isCompleted = true;
+      if (item._id === taskID) {
+        item.complete = true;
       }
     });
 
@@ -71,7 +71,7 @@ class HomePage extends Component {
     this.setState((state) => {
       return {
         newTask: {
-          name: inputText,
+          task: inputText,
         },
       };
     });
@@ -85,7 +85,7 @@ class HomePage extends Component {
         <AddNewTaskContainer
           handleAddNewTaskBtnClick={this.addNewTask}
           onChangeTaskInputField={this.onChangeTaskInputField}
-          inputFieldValue={this.state.newTask.name}
+          inputFieldValue={this.state.newTask.task}
         />
         <TaskListContainer
           taskList={this.state.taskList}
