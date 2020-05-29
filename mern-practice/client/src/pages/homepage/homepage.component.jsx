@@ -9,11 +9,7 @@ class HomePage extends Component {
     super(props);
 
     this.state = {
-      taskList: [
-        { _id: '_l4wnop', task: 'Evening Workout', complete: false },
-        { _id: '_l4wsy2', task: 'Do something', complete: false },
-        { _id: '_l65212', task: 'Sleep atleast for 10hours', complete: false },
-      ],
+      taskList: [],
       newTask: { task: '', complete: false },
     };
 
@@ -27,54 +23,79 @@ class HomePage extends Component {
     return '_' + Math.random().toString(36).substr(2, 6);
   }
 
-  addNewTask() {
+  async addNewTask() {
     const currentTasks = this.state.taskList;
     const newTaskName = this.state.newTask.task;
 
     if (newTaskName !== '') {
-      currentTasks.push({
-        _id: this.generateID(),
-        task: newTaskName,
-        complete: false,
+      let response = await fetch('http://localhost:5000/todo/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+        body: JSON.stringify(this.state.newTask),
       });
+      let result = await response.json();
 
+      if (result.status === 'success') {
+        currentTasks.push(result.todo);
+      }
       this.setState({ taskList: currentTasks });
-      this.setState({
-        newTask: { task: '', complete: false },
-      });
     }
   }
 
-  handleDeleteBtnClick(event) {
+  async handleDeleteBtnClick(event) {
     const currentTasks = this.state.taskList;
     const taskID = event.target.getAttribute('data-task-id');
-    console.log('delete button clicked', taskID);
-    const newTaskList = currentTasks.filter((item) => item._id !== taskID);
-    console.log(newTaskList);
-    this.setState({ taskList: newTaskList });
+
+    let response = await fetch(`http://localhost:5000/todo/delete/${taskID}`);
+    let result = await response.json();
+
+    if (result.status === 'success') {
+      const newTaskList = currentTasks.filter((item) => item._id !== taskID);
+      this.setState({ taskList: newTaskList });
+    }
   }
 
-  handleDoneBtnClick(event) {
+  async handleDoneBtnClick(event) {
     const currentTasks = this.state.taskList;
     const taskID = event.target.getAttribute('data-task-id');
-    console.log('done button clicked', taskID);
+    const newTaskObj = {};
+
     currentTasks.forEach((item) => {
       if (item._id === taskID) {
         item.complete = true;
+        newTaskObj.task = item.task;
+        newTaskObj.complete = true;
       }
     });
 
-    this.setState({ taskList: currentTasks });
+    let response = await fetch(`http://localhost:5000/todo/update/${taskID}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify(newTaskObj),
+    });
+    let result = await response.json();
+
+    if (result.status === 'success') {
+      this.setState({ taskList: currentTasks });
+    }
   }
 
   onChangeTaskInputField(inputText) {
     this.setState((state) => {
       return {
-        newTask: {
-          task: inputText,
-        },
+        newTask: { ...state.newTask, task: inputText },
       };
     });
+  }
+
+  async componentDidMount() {
+    let response = await fetch('http://localhost:5000/todos');
+    let result = await response.json();
+    this.setState({ taskList: result });
   }
 
   render() {
