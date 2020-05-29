@@ -8,9 +8,9 @@ const TaskListContainer = ({ taskList, handleDoneBtnClick, handleDeleteBtnClick 
       {taskList.map((item, key) => (
         <Task
           key={key}
-          id={item.id}
-          name={item.name}
-          isCompleted={item.isCompleted}
+          id={item._id}
+          name={item.task}
+          isCompleted={item.complete}
           handleDoneBtnClick={handleDoneBtnClick}
           handleDeleteBtnClick={handleDeleteBtnClick}
         />
