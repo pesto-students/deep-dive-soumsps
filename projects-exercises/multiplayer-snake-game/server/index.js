@@ -1,6 +1,10 @@
 const http = require('http');
 const WebSocket = require('websocket').server;
 const METHODS = require('./src/consts/game-consts');
+const express = require("express");
+const app = express();
+
+app.use(express.static(__dirname + "/"))
 
 let connection = null;
 const players = {};
@@ -104,6 +108,38 @@ const foodAte = (res) => {
 }
 
 const directionChange = (res) => {
+    const playerID = res.playerID;
+    const gameID = res.gameID;
+    const game = games[gameID];
+    const direction = res.direction;
+    const index = game.players.findIndex((item) => item.playerID === playerID);
+    let head = game.players[index].body[game.players[index].body.length - 1];
+    switch (direction) {
+        case 'RIGHT':
+            head = { x: head.x + 2, y: head.y };
+            break;
+        case 'LEFT':
+            head = { x: head.x - 2, y: head.y };
+            break;
+        case 'DOWN':
+            head = { x: head.x, y: head.y + 2 };
+            break;
+        case 'UP':
+            head = { x: head.x, y: head.y - 2 };
+            break;
+    }
+
+    game.players[index].body.push(head);
+    game.players[index].body.shift();
+
+    const payLoad = {
+        'method': METHODS.DIRECTIONCHANGED,
+        'game': game
+    }
+
+    for (let item of game.players) {
+        players[item.playerID].connection.send(JSON.stringify(payLoad));
+    }
 
 }
 
