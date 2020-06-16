@@ -27,9 +27,9 @@ import {
   DEFAULT_GAME_STATUS,
   DEFAULT_SNAKE_DATA,
 } from '../../game-utility/constant';
-import './homepage.styles.css';
+import './multiplayer.styles.css';
 
-const HomePage = () => {
+const MultiplayerPage = () => {
   const browserWindowSize = useCallback(useWindowSize());
   const [boardSize] = useState({ ...DEFAULT_BOARD_SIZE });
   const [boardBlockSize, setBoardBlockSize] = useState(null);
@@ -118,18 +118,14 @@ const HomePage = () => {
       <header className="header">
         <div>
           <h1 className="game-title">Snake Game</h1>
-          <small>Singleplayer Mode</small>
+          <small>Multiplayer Mode</small>
         </div>
         <div>
           <CustomButton btnClass={'btn-normal'} onClickCallback={() => {}}>
-            Multiplayer Mode
+            Singleplayer Mode
           </CustomButton>
         </div>
       </header>
-      <div className="scoreboard">
-        <div className="score-text">Score: {scoreBoard.score}</div>
-        <div className="score-text">High Score: {scoreBoard.highScore}</div>
-      </div>
 
       <GameBoard
         boardSize={boardSize}
@@ -154,4 +150,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default MultiplayerPage;

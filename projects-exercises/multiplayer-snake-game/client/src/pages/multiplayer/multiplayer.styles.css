@@ -7,6 +7,8 @@
 .header {
   text-align: center;
   margin: 20px 0px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .game-title {
@@ -19,17 +21,6 @@
   font-size: 15px;
   font-weight: 400;
   margin: 0;
-}
-
-.score-text {
-  margin: 10px 0px 0px 0px;
-  text-align: center;
-}
-
-.scoreboard {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
 }
 
 .instruction-text {
