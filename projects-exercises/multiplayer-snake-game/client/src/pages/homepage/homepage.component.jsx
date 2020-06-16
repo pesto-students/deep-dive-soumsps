@@ -74,11 +74,7 @@ const HomePage = () => {
   }, [boardSize, updateScore]);
 
   const drawData = useCallback(() => {
-    drawSnake(
-      gameBoardRef.current,
-      snakeRef.current.body,
-      snakeRef.current.color
-    );
+    drawSnake(gameBoardRef.current, [snakeRef.current]);
     drawFood(gameBoardRef.current, foodPositionRef.current);
   }, []);
 
