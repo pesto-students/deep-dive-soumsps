@@ -1,26 +1,29 @@
-const drawSnake = (gameBoard, snakeBody, snakeColor) => {
+const drawSnake = (gameBoard, snakesData) => {
   if (!gameBoard) return;
-  // only remove class='snake' child nodes
 
+  // only remove class='snake' child nodes
   for (const node of gameBoard.childNodes) {
     if (node.classList.value === 'snake') {
       gameBoard.removeChild(node);
     }
   }
 
-  for (let i = 0; i < snakeBody.length; i++) {
-    const segment = snakeBody[i];
-    const snakeElement = document.createElement('div');
-    snakeElement.style.gridColumnStart = segment[0];
-    snakeElement.style.gridRowStart = segment[1];
+  for (const snake of snakesData) {
+    const snakeBody = snake.body;
+    for (let i = 0; i < snakeBody.length; i++) {
+      const segment = snakeBody[i];
+      const snakeElement = document.createElement('div');
+      snakeElement.style.gridColumnStart = segment[0];
+      snakeElement.style.gridRowStart = segment[1];
 
-    snakeElement.classList.add('snake');
-    if (i === 0) {
-      snakeElement.style.backgroundColor = 'black';
-    } else {
-      snakeElement.style.backgroundColor = snakeColor;
+      snakeElement.classList.add('snake');
+      if (i === 0) {
+        snakeElement.style.backgroundColor = 'black';
+      } else {
+        snakeElement.style.backgroundColor = snake.color;
+      }
+      gameBoard.appendChild(snakeElement);
     }
-    gameBoard.appendChild(snakeElement);
   }
 };
 

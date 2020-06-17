@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import GameController from '../../components/game-controller/game-controller.component';
 import GameBoard from '../../components/game-board/game-board.component';
-import NewGameModal from '../../components/popup-modals/new-game-modal.component';
+import LeaveMultiplayerModal from '../../components/popup-modals/leave-multiplayer-modal.component';
+import JoinGameModal from '../../components/popup-modals/join-game-modal.component';
 
 import CustomButton from '../../components/custom-button/custom-button.component';
 import { useWindowSize } from '../../custom-hooks/use-window-size.hook';
@@ -28,14 +29,17 @@ import {
   DEFAULT_GAME_STATUS,
   DEFAULT_SNAKE_DATA,
 } from '../../game-utility/constant';
-import './homepage.styles.css';
+import './multiplayer.styles.css';
 
-const HomePage = () => {
+const MultiplayerPage = (props) => {
   const browserWindowSize = useCallback(useWindowSize());
-  const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(false);
+  const [
+    isLeaveMultiplayerModalOpen,
+    setIsLeaveMultiplayerModalOpen,
+  ] = useState(false);
+  const [isJoinGameModalOpen, setIsJoinGameModalOpen] = useState(false);
   const [boardSize] = useState({ ...DEFAULT_BOARD_SIZE });
   const [boardBlockSize, setBoardBlockSize] = useState(null);
-  const [scoreBoard, setScoreBoard] = useState({ score: 0, highScore: 0 });
 
   const [isSinglePlayerMode] = useState(DEFAULT_IS_SINGLE_PLAYER_MODE);
   // possible modes: not-started, playing, paused, and finished
@@ -46,15 +50,7 @@ const HomePage = () => {
   const gameBoardRef = useRef(null);
   const lastSnakeMoveTimeRef = useRef(0);
 
-  const updateScore = useCallback(() => {
-    setScoreBoard((state) => {
-      const newScore = state.score + 1;
-      if (newScore > state.highScore) {
-        return { score: newScore, highScore: newScore };
-      }
-      return { ...state, score: newScore };
-    });
-  }, []);
+  console.log('gameId: ', props.gameId);
 
   const updateData = useCallback(() => {
     if (isSnakeDead(snakeRef, boardSize)) {
@@ -70,15 +66,39 @@ const HomePage = () => {
       growSnake(snakeRef.current.body);
       removeOldFood(gameBoardRef.current);
       foodPositionRef.current = getRandomFoodPosition(boardSize);
-      updateScore();
+
       updateSnakeSpeed(snakeRef);
     }
-  }, [boardSize, updateScore]);
+  }, [boardSize]);
+
+  const snake2 = {
+    playerID: 'single-player',
+    body: [
+      [24, 17],
+      [24, 16],
+      [24, 15],
+    ],
+    color: 'green',
+    speed: 160,
+    direction: 'down',
+  };
+
+  const snake3 = {
+    playerID: 'single-player',
+    body: [
+      [44, 22],
+      [44, 23],
+      [44, 24],
+    ],
+    color: 'red',
+    speed: 160,
+    direction: 'up',
+  };
 
   const drawData = useCallback(() => {
-    drawSnake(gameBoardRef.current, [snakeRef.current]);
+    drawSnake(gameBoardRef.current, [snakeRef.current, snake2, snake3]);
     drawFood(gameBoardRef.current, foodPositionRef.current);
-  }, []);
+  }, [snake2, snake3]);
 
   // runs every 16.67ms
   const update = useCallback(
@@ -98,7 +118,6 @@ const HomePage = () => {
 
   const onRestartButtonPress = (snakeRef) => {
     snakeRef.current = { ...DEFAULT_SNAKE_DATA };
-    setScoreBoard((state) => ({ ...state, score: 0 }));
   };
 
   useEffect(() => {
@@ -116,22 +135,35 @@ const HomePage = () => {
       <header className="header">
         <div>
           <h1 className="game-title">Snake Game</h1>
-          <small>Singleplayer Mode</small>
+          <small>Multiplayer Mode</small>
         </div>
         <div>
           <CustomButton
             btnClass={'btn-normal'}
             onClickCallback={() => {
-              setIsNewGameModalOpen(true);
+              setIsLeaveMultiplayerModalOpen(true);
             }}
           >
-            Multiplayer Mode
+            Singleplayer Mode
           </CustomButton>
         </div>
       </header>
-      <div className="scoreboard">
-        <div className="score-text">Score: {scoreBoard.score}</div>
-        <div className="score-text">High Score: {scoreBoard.highScore}</div>
+
+      <div className="join-game-alert">
+        <div className="join-alert-text">
+          <h4 style={{ margin: '0', fontWeight: '400' }}>
+            You haven't joined this game yet.
+          </h4>
+        </div>
+
+        <CustomButton
+          btnClass={'btn-restart'}
+          onClickCallback={() => {
+            setIsJoinGameModalOpen(true);
+          }}
+        >
+          Join Now
+        </CustomButton>
       </div>
 
       <GameBoard
@@ -149,16 +181,19 @@ const HomePage = () => {
       <div className="instruction-text">
         Use <b>Enter</b> key to Start / Restart
         <br />
-        Use <b>Space</b> key to Pause / Resume
-        <br />
         Use <b>Arrow</b> or <b>W,A,S,D</b> keys to control snake.
       </div>
 
-      {isNewGameModalOpen && (
-        <NewGameModal closeModalCallback={setIsNewGameModalOpen} />
+      {isJoinGameModalOpen && (
+        <JoinGameModal closeModalCallback={setIsJoinGameModalOpen} />
+      )}
+      {isLeaveMultiplayerModalOpen && (
+        <LeaveMultiplayerModal
+          closeModalCallback={setIsLeaveMultiplayerModalOpen}
+        />
       )}
     </div>
   );
 };
 
-export default HomePage;
+export default MultiplayerPage;
