@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import GameController from '../../components/game-controller/game-controller.component';
 import GameBoard from '../../components/game-board/game-board.component';
+import NewGameModal from '../../components/popup-modals/new-game-modal.component';
 
 import CustomButton from '../../components/custom-button/custom-button.component';
 import { useWindowSize } from '../../custom-hooks/use-window-size.hook';
@@ -31,6 +32,7 @@ import './homepage.styles.css';
 
 const HomePage = () => {
   const browserWindowSize = useCallback(useWindowSize());
+  const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(true);
   const [boardSize] = useState({ ...DEFAULT_BOARD_SIZE });
   const [boardBlockSize, setBoardBlockSize] = useState(null);
   const [scoreBoard, setScoreBoard] = useState({ score: 0, highScore: 0 });
@@ -117,7 +119,12 @@ const HomePage = () => {
           <small>Singleplayer Mode</small>
         </div>
         <div>
-          <CustomButton btnClass={'btn-normal'} onClickCallback={() => {}}>
+          <CustomButton
+            btnClass={'btn-normal'}
+            onClickCallback={() => {
+              setIsNewGameModalOpen(true);
+            }}
+          >
             Multiplayer Mode
           </CustomButton>
         </div>
@@ -146,6 +153,10 @@ const HomePage = () => {
         <br />
         Use <b>Arrow</b> or <b>W,A,S,D</b> keys to control snake.
       </div>
+
+      {isNewGameModalOpen && (
+        <NewGameModal closeModalCallback={setIsNewGameModalOpen} />
+      )}
     </div>
   );
 };

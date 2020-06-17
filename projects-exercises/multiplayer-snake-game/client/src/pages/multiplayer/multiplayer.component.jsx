@@ -73,12 +73,32 @@ const MultiplayerPage = () => {
     }
   }, [boardSize, updateScore]);
 
+  const snake2 = {
+    playerID: 'single-player',
+    body: [
+      [24, 17],
+      [24, 16],
+      [24, 15],
+    ],
+    color: 'green',
+    speed: 160,
+    direction: 'down',
+  };
+
+  const snake3 = {
+    playerID: 'single-player',
+    body: [
+      [44, 22],
+      [44, 23],
+      [44, 24],
+    ],
+    color: 'red',
+    speed: 160,
+    direction: 'up',
+  };
+
   const drawData = useCallback(() => {
-    drawSnake(
-      gameBoardRef.current,
-      snakeRef.current.body,
-      snakeRef.current.color
-    );
+    drawSnake(gameBoardRef.current, [snakeRef.current, snake2, snake3]);
     drawFood(gameBoardRef.current, foodPositionRef.current);
   }, []);
 

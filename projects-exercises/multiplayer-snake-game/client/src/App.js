@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <Router>
         <HomePage path="/" />
-        <MultiplayerPage path="mp/game/:gameId" />
+        <MultiplayerPage path="multiplayer/:gameId" />
       </Router>
     </div>
   );
