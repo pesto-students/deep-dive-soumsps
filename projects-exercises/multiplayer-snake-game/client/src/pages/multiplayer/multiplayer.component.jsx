@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import GameController from '../../components/game-controller/game-controller.component';
 import GameBoard from '../../components/game-board/game-board.component';
 import LeaveMultiplayerModal from '../../components/popup-modals/leave-multiplayer-modal.component';
+import JoinGameModal from '../../components/popup-modals/join-game-modal.component';
 
 import CustomButton from '../../components/custom-button/custom-button.component';
 import { useWindowSize } from '../../custom-hooks/use-window-size.hook';
@@ -30,15 +31,15 @@ import {
 } from '../../game-utility/constant';
 import './multiplayer.styles.css';
 
-const MultiplayerPage = () => {
+const MultiplayerPage = (props) => {
   const browserWindowSize = useCallback(useWindowSize());
   const [
     isLeaveMultiplayerModalOpen,
     setIsLeaveMultiplayerModalOpen,
   ] = useState(false);
+  const [isJoinGameModalOpen, setIsJoinGameModalOpen] = useState(false);
   const [boardSize] = useState({ ...DEFAULT_BOARD_SIZE });
   const [boardBlockSize, setBoardBlockSize] = useState(null);
-  const [scoreBoard, setScoreBoard] = useState({ score: 0, highScore: 0 });
 
   const [isSinglePlayerMode] = useState(DEFAULT_IS_SINGLE_PLAYER_MODE);
   // possible modes: not-started, playing, paused, and finished
@@ -49,15 +50,7 @@ const MultiplayerPage = () => {
   const gameBoardRef = useRef(null);
   const lastSnakeMoveTimeRef = useRef(0);
 
-  const updateScore = useCallback(() => {
-    setScoreBoard((state) => {
-      const newScore = state.score + 1;
-      if (newScore > state.highScore) {
-        return { score: newScore, highScore: newScore };
-      }
-      return { ...state, score: newScore };
-    });
-  }, []);
+  console.log('gameId: ', props.gameId);
 
   const updateData = useCallback(() => {
     if (isSnakeDead(snakeRef, boardSize)) {
@@ -73,10 +66,10 @@ const MultiplayerPage = () => {
       growSnake(snakeRef.current.body);
       removeOldFood(gameBoardRef.current);
       foodPositionRef.current = getRandomFoodPosition(boardSize);
-      updateScore();
+
       updateSnakeSpeed(snakeRef);
     }
-  }, [boardSize, updateScore]);
+  }, [boardSize]);
 
   const snake2 = {
     playerID: 'single-player',
@@ -105,7 +98,7 @@ const MultiplayerPage = () => {
   const drawData = useCallback(() => {
     drawSnake(gameBoardRef.current, [snakeRef.current, snake2, snake3]);
     drawFood(gameBoardRef.current, foodPositionRef.current);
-  }, []);
+  }, [snake2, snake3]);
 
   // runs every 16.67ms
   const update = useCallback(
@@ -125,7 +118,6 @@ const MultiplayerPage = () => {
 
   const onRestartButtonPress = (snakeRef) => {
     snakeRef.current = { ...DEFAULT_SNAKE_DATA };
-    setScoreBoard((state) => ({ ...state, score: 0 }));
   };
 
   useEffect(() => {
@@ -157,6 +149,23 @@ const MultiplayerPage = () => {
         </div>
       </header>
 
+      <div className="join-game-alert">
+        <div className="join-alert-text">
+          <h4 style={{ margin: '0', fontWeight: '400' }}>
+            You haven't joined this game yet.
+          </h4>
+        </div>
+
+        <CustomButton
+          btnClass={'btn-restart'}
+          onClickCallback={() => {
+            setIsJoinGameModalOpen(true);
+          }}
+        >
+          Join Now
+        </CustomButton>
+      </div>
+
       <GameBoard
         boardSize={boardSize}
         boardBlockSize={boardBlockSize}
@@ -172,10 +181,12 @@ const MultiplayerPage = () => {
       <div className="instruction-text">
         Use <b>Enter</b> key to Start / Restart
         <br />
-        Use <b>Space</b> key to Pause / Resume
-        <br />
         Use <b>Arrow</b> or <b>W,A,S,D</b> keys to control snake.
       </div>
+
+      {isJoinGameModalOpen && (
+        <JoinGameModal closeModalCallback={setIsJoinGameModalOpen} />
+      )}
       {isLeaveMultiplayerModalOpen && (
         <LeaveMultiplayerModal
           closeModalCallback={setIsLeaveMultiplayerModalOpen}
