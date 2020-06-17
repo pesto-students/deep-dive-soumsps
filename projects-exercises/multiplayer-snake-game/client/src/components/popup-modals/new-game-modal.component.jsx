@@ -7,6 +7,7 @@ const NewGameModal = (props) => {
 
   const handleNewGameFormSubmit = (event) => {
     event.preventDefault();
+    navigate('multiplayer/asaddsf');
     console.log('newGame form submit');
   };
   return (
@@ -16,7 +17,7 @@ const NewGameModal = (props) => {
       </Modal.Header>
       <Modal.Body>
         <form onSubmit={(event) => handleNewGameFormSubmit(event)}>
-          <div className="form-input">
+          <div className="form-input" style={{ marginBottom: '20px' }}>
             <input
               tabIndex="1"
               type="text"
@@ -31,11 +32,11 @@ const NewGameModal = (props) => {
           </div>
 
           <button
-            className="btn-normal"
+            className="btn-success"
             style={{ borderRadius: '5px', cursor: 'pointer' }}
             data-last-focusable="true"
           >
-            Create
+            Create room
           </button>
         </form>
       </Modal.Body>

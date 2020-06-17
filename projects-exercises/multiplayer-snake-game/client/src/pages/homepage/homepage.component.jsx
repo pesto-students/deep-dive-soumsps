@@ -32,7 +32,7 @@ import './homepage.styles.css';
 
 const HomePage = () => {
   const browserWindowSize = useCallback(useWindowSize());
-  const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(true);
+  const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(false);
   const [boardSize] = useState({ ...DEFAULT_BOARD_SIZE });
   const [boardBlockSize, setBoardBlockSize] = useState(null);
   const [scoreBoard, setScoreBoard] = useState({ score: 0, highScore: 0 });

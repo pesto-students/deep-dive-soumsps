@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import GameController from '../../components/game-controller/game-controller.component';
 import GameBoard from '../../components/game-board/game-board.component';
+import LeaveMultiplayerModal from '../../components/popup-modals/leave-multiplayer-modal.component';
 
 import CustomButton from '../../components/custom-button/custom-button.component';
 import { useWindowSize } from '../../custom-hooks/use-window-size.hook';
@@ -31,6 +32,10 @@ import './multiplayer.styles.css';
 
 const MultiplayerPage = () => {
   const browserWindowSize = useCallback(useWindowSize());
+  const [
+    isLeaveMultiplayerModalOpen,
+    setIsLeaveMultiplayerModalOpen,
+  ] = useState(false);
   const [boardSize] = useState({ ...DEFAULT_BOARD_SIZE });
   const [boardBlockSize, setBoardBlockSize] = useState(null);
   const [scoreBoard, setScoreBoard] = useState({ score: 0, highScore: 0 });
@@ -141,7 +146,12 @@ const MultiplayerPage = () => {
           <small>Multiplayer Mode</small>
         </div>
         <div>
-          <CustomButton btnClass={'btn-normal'} onClickCallback={() => {}}>
+          <CustomButton
+            btnClass={'btn-normal'}
+            onClickCallback={() => {
+              setIsLeaveMultiplayerModalOpen(true);
+            }}
+          >
             Singleplayer Mode
           </CustomButton>
         </div>
@@ -166,6 +176,11 @@ const MultiplayerPage = () => {
         <br />
         Use <b>Arrow</b> or <b>W,A,S,D</b> keys to control snake.
       </div>
+      {isLeaveMultiplayerModalOpen && (
+        <LeaveMultiplayerModal
+          closeModalCallback={setIsLeaveMultiplayerModalOpen}
+        />
+      )}
     </div>
   );
 };
